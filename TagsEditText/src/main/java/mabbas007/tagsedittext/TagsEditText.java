@@ -98,9 +98,6 @@ public class TagsEditText extends AutoCompleteTextView {
 
     private TagsEditListener mListener;
 
-    private int length;
-    private int beforeLength;
-    private int limitLength;
     private static final int MAX_LENGTH = 11;
 
     private final TextWatcher mTextWatcher = new TextWatcher() {
@@ -110,27 +107,14 @@ public class TagsEditText extends AutoCompleteTextView {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            length = s.toString().length();
-            Log.e("=====", "==s==" + s + "===length=" + length);
-//            limitLength(s.toString());
-
-            /*String toString = s.toString();
-            if (!toString.isEmpty()) {
-                if (toString.endsWith(mSeparator) || toString.endsWith(NEW_LINE)) {
-                    length = 0;
-                } else {
-                    length += count;
-                }
-            }
-            if (length > 10) {
-                Toast.makeText(getContext(), "最多10个字符", Toast.LENGTH_SHORT).show();
-            }*/
         }
 
         @Override
         public void afterTextChanged(Editable s) {
             if (mIsAfterTextWatcherEnabled) {
                 setTags();
+                limitLength(s.toString());
+                limitNum();
             }
         }
     };
@@ -139,27 +123,39 @@ public class TagsEditText extends AutoCompleteTextView {
         boolean contains = string.contains(mSeparator);
         if (contains) {
             if (string.endsWith(mSeparator) || string.endsWith(NEW_LINE)) {
-                setFilters(new InputFilter[]{new InputFilter.LengthFilter(string.length() + MAX_LENGTH)});
-                return;
+                setLimitLength(string.length() + MAX_LENGTH);
             }
 
-//            String[] split = string.split(mSeparator);
-//            for (int i = 0; i < split.length; i++) {
-//                Log.e("===split==", "====" + split[i] + "====");
-//            }
-//
-//            beforeLength = string.length() - split[split.length - 1].length();
-//            Log.e("==split==", "====" + split[split.length - 1]);
-//            Log.e("=beforeLength=====", "=====" + beforeLength);
-//
-//            limitLength = beforeLength + MAX_LENGTH;
-//            Log.e("==limitLength==", "=====" + limitLength);
-//
-//            setFilters(new InputFilter[]{new InputFilter.LengthFilter(limitLength)});
+            String[] split = string.split(mSeparator);
+            int length = split[split.length - 1].length();
+            if (length > 10) {
+                Toast.makeText(getContext(), "最多10个字符", Toast.LENGTH_SHORT).show();
+            }
 
         } else {
-            setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGTH)});
+            int length = string.length();
+            if (length > 10) {
+                Toast.makeText(getContext(), "最多10个字符", Toast.LENGTH_SHORT).show();
+            }
+            setLimitLength(MAX_LENGTH);
         }
+    }
+
+    private void limitNum() {
+        int size = mTagSpans.size();
+        if (size >= 5) {
+            Toast.makeText(getContext(), "最多5个标签", Toast.LENGTH_SHORT).show();
+
+            int length = 0;
+            for (TagSpan a: mTagSpans) {
+                length += a.getSource().length();
+            }
+            setLimitLength(length + 4);
+        }
+    }
+
+    public void setLimitLength(int length) {
+        setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
     }
 
     public List<String> getTags(){

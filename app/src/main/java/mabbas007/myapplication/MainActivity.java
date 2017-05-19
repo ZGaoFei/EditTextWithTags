@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -30,19 +29,20 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTagsChanged(Collection<String> tags) {
                 String s = Arrays.toString(tags.toArray());
-//                Log.e("===change===", "=====" + s);
-                // TODO: 2017/5/19 解析出标签列表，判断标签个数
+                String[] split = s.split(" ");
+                if (split.length == 5) {
+                    Log.e("======", "======" + s + "===" + s.length());
+                }
             }
 
             @Override
 
             public void onEditingFinished() {
-//                Log.e("======", "==finished====");
             }
         });
         mTagsEditText.setTagsWithSpacesEnabled(false);
-        mTagsEditText.setAdapter(new ArrayAdapter<>(this,
-                android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.fruits)));
+//        mTagsEditText.setAdapter(new ArrayAdapter<>(this,
+//                android.R.layout.simple_dropdown_item_1line, getResources().getStringArray(R.array.fruits)));
         mTagsEditText.setThreshold(1);
 //        mTagsEditText.setOnEditorActionListener(actionListener);
 //        mTagsEditText.setOnKeyListener(keyListener);
