@@ -18,6 +18,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
     private TagsEditText mTagsEditText;
+    private int size = 2;
+    private boolean isChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,6 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-
             public void onEditingFinished() {
             }
         });
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity
         mTagsEditText.setThreshold(1);
 //        mTagsEditText.setOnEditorActionListener(actionListener);
 //        mTagsEditText.setOnKeyListener(keyListener);
+
+//        mTagsEditText.setSize(size);
 
         setButtonClickListener(R.id.btnChangeTags);
         setButtonClickListener(R.id.btnChangeBackground);
@@ -100,6 +103,17 @@ public class MainActivity extends AppCompatActivity
 //                mTagsEditText.setCloseDrawablePadding(R.dimen.larger_padding);
                 String s = mTagsEditText.getText().toString();
                 Log.e("=======", "======" + s);
+
+                if (isChecked) {
+                    isChecked = false;
+                    size ++;
+                    mTagsEditText.setSize(size);
+                } else {
+                    isChecked = true;
+                    size --;
+                    mTagsEditText.setSize(size);
+                }
+                Log.e("===size===", "======" + size);
                 break;
             }
         }

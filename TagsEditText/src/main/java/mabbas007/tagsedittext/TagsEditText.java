@@ -29,9 +29,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.AutoCompleteTextView;
@@ -99,6 +97,7 @@ public class TagsEditText extends AutoCompleteTextView {
     private TagsEditListener mListener;
 
     private static final int MAX_LENGTH = 11;
+    private int mSize = 0;
 
     private final TextWatcher mTextWatcher = new TextWatcher() {
         @Override
@@ -120,7 +119,7 @@ public class TagsEditText extends AutoCompleteTextView {
     };
 
     private void limitLength(String string) {
-        boolean contains = string.contains(mSeparator);
+        boolean contains = string.trim().contains(mSeparator);
         if (contains) {
             if (string.endsWith(mSeparator) || string.endsWith(NEW_LINE)) {
                 setLimitLength(string.length() + MAX_LENGTH);
@@ -141,8 +140,18 @@ public class TagsEditText extends AutoCompleteTextView {
         }
     }
 
+    public void setSize(int size) {
+        mSize = size;
+
+        int length = 0;
+        for (TagSpan a: mTagSpans) {
+            length += a.getSource().length();
+        }
+        setLimitLength(length + mTagSpans.size() + MAX_LENGTH);
+    }
+
     private void limitNum() {
-        int size = mTagSpans.size();
+        int size = mTagSpans.size() + mSize;
         if (size >= 5) {
             Toast.makeText(getContext(), "最多5个标签", Toast.LENGTH_SHORT).show();
 
@@ -150,11 +159,11 @@ public class TagsEditText extends AutoCompleteTextView {
             for (TagSpan a: mTagSpans) {
                 length += a.getSource().length();
             }
-            setLimitLength(length + 4);
+            setLimitLength(length + mTagSpans.size());
         }
     }
 
-    public void setLimitLength(int length) {
+    private void setLimitLength(int length) {
         setFilters(new InputFilter[]{new InputFilter.LengthFilter(length)});
     }
 

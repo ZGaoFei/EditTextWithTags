@@ -16,8 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         TagsEditText:allowSpaceInTag="true"
-        TagsEditText:tagsBackground="@drawable/square_default"
-        TagsEditText:tagsCloseImageRight="@drawable/tag_close" />
+        TagsEditText:tagsBackground="@drawable/square_default"/>
+    <!--TagsEditText:tagsCloseImageRight="@drawable/tag_close" -->
 
     <ScrollView
         android:layout_width="match_parent"
